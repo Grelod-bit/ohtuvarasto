@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Warehouse inventory</title>
+  </head>
+  <body>
+    <h1>Warehouse inventory</h1>
+
+    {% if error %}
+      <p role="alert">{{ error }}</p>
+    {% endif %}
+
+    <h2>Create an item</h2>
+    <form method="post" action="{{ url_for('create_item') }}">
+      <label>
+        Name
+        <input name="name" required>
+      </label>
+      <label>
+        Initial quantity
+        <input name="quantity" type="number" min="0" step="any" required>
+      </label>
+      <button type="submit">Create item</button>
+    </form>
+
+    <h2>Inventory</h2>
+    {% if inventory %}
+      <ul>
+        {% for name, item in inventory.items() %}
+          <li>
+            <strong>{{ name }}</strong>: {{ item.saldo }}
+            <form method="post" action="{{ url_for('add_item') }}">
+              <input type="hidden" name="name" value="{{ name }}">
+              <label>
+                Quantity to add
+                <input name="quantity" type="number" min="0" step="any" required>
+              </label>
+              <button type="submit">Add</button>
+            </form>
+            <form method="post" action="{{ url_for('remove_item') }}">
+              <input type="hidden" name="name" value="{{ name }}">
+              <label>
+                Quantity to remove
+                <input name="quantity" type="number" min="0" step="any" required>
+              </label>
+              <button type="submit">Remove</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No inventory items yet.</p>
+    {% endif %}
+  </body>
+</html>
